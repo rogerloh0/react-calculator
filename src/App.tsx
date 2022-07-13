@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, Grid, Typography } from "@mui/material";
+import React, { useReducer } from "react";
+import { Button, Container, Grid, Typography } from "@mui/material";
 import { createUseStyles, useTheme, ThemeProvider } from "react-jss";
 import { CalButton } from "./components/CalButton/CalButton";
 import { theme } from "./theme";
@@ -28,11 +28,53 @@ const useStyles = createUseStyles(() => ({
   previousOperand: { color: "gray" },
 }));
 
+enum ACTIONS {
+  ADD_DIGIT = "add-digit",
+}
+
+interface ICalculatorAction {
+  type: ACTIONS;
+  payload: {
+    digit?: string;
+  };
+}
+
+interface ICalculatorState {
+  currentOperand: string;
+  previousOperand: string;
+  operation: string;
+}
+
+function calculatorReducer(state: ICalculatorState, action: ICalculatorAction) {
+  const { type, payload } = action;
+  switch (type) {
+    case ACTIONS.ADD_DIGIT:
+      return {
+        ...state,
+        currentOperand: state.currentOperand + payload.digit,
+      };
+  }
+}
+
 function App() {
   const styles = useStyles();
   const themeColor = theme;
+
+  const [state, dispatch] = useReducer(calculatorReducer, {
+    currentOperand: "",
+    previousOperand: "",
+    operation: "",
+  });
+
   return (
     <div className={styles.background}>
+      <Button
+        onClick={() => {
+          dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit: "1" } });
+        }}
+      >
+        TEST BUTTON
+      </Button>
       <Grid
         container
         className={styles.calculatorBody}
@@ -48,7 +90,7 @@ function App() {
         </Grid>
         <Grid item xs={12} textAlign="end">
           <Typography className={styles.currentOperand} sx={{ fontSize: 50 }}>
-            1234
+            {state.currentOperand}
           </Typography>
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
