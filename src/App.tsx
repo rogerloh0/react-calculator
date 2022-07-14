@@ -2,7 +2,8 @@ import React, { useReducer } from "react";
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { createUseStyles, useTheme, ThemeProvider } from "react-jss";
 import { CalButton } from "./components/CalButton/CalButton";
-import { theme } from "./theme";
+import { DigitButton } from "./components/DigitButton/DigitButton";
+import { theme as themeColor } from "./theme";
 
 const useStyles = createUseStyles(() => ({
   background: {
@@ -28,14 +29,16 @@ const useStyles = createUseStyles(() => ({
   previousOperand: { color: "gray" },
 }));
 
-enum ACTIONS {
+export enum ACTIONS {
   ADD_DIGIT = "add-digit",
+  DEFAULT = "default",
 }
 
-interface ICalculatorAction {
+export interface ICalculatorAction {
   type: ACTIONS;
   payload: {
     digit?: string;
+    operation?: string;
   };
 }
 
@@ -53,12 +56,13 @@ function calculatorReducer(state: ICalculatorState, action: ICalculatorAction) {
         ...state,
         currentOperand: state.currentOperand + payload.digit,
       };
+    default:
+      return state;
   }
 }
 
 function App() {
   const styles = useStyles();
-  const themeColor = theme;
 
   const [state, dispatch] = useReducer(calculatorReducer, {
     currentOperand: "",
@@ -69,9 +73,9 @@ function App() {
   return (
     <div className={styles.background}>
       <Button
-        onClick={() => {
-          dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit: "1" } });
-        }}
+        onClick={() =>
+          dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit: "1" } })
+        }
       >
         TEST BUTTON
       </Button>
@@ -98,6 +102,13 @@ function App() {
             bgColor={themeColor.light.background}
             textColor={themeColor.light.text}
             text="AC"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -105,6 +116,13 @@ function App() {
             bgColor={themeColor.light.background}
             textColor={themeColor.light.text}
             text="+/-"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -112,6 +130,13 @@ function App() {
             bgColor={themeColor.light.background}
             textColor={themeColor.light.text}
             text="%"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -119,28 +144,29 @@ function App() {
             bgColor={themeColor.primary.background}
             textColor={themeColor.primary.text}
             text="÷"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={dispatch}
           />
         </Grid>
         {/* Row Divider */}
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="1"
-          />
+          <DigitButton digit="1" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="2"
-          />
+          <DigitButton digit="2" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <CalButton
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="3"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -148,6 +174,13 @@ function App() {
             bgColor={themeColor.primary.background}
             textColor={themeColor.primary.text}
             text="×"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         {/* Row Divider */}
@@ -156,6 +189,13 @@ function App() {
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="4"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -163,6 +203,13 @@ function App() {
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="5"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -170,6 +217,13 @@ function App() {
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="6"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -177,6 +231,13 @@ function App() {
             bgColor={themeColor.primary.background}
             textColor={themeColor.primary.text}
             text="-"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         {/* Row Divider */}
@@ -185,6 +246,13 @@ function App() {
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="7"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -192,6 +260,13 @@ function App() {
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="8"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -199,6 +274,13 @@ function App() {
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="9"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -206,6 +288,13 @@ function App() {
             bgColor={themeColor.primary.background}
             textColor={themeColor.primary.text}
             text="+"
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         {/* Row Divider */}
@@ -214,7 +303,14 @@ function App() {
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="0"
+            actionType={ACTIONS.DEFAULT}
             long
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -222,6 +318,13 @@ function App() {
             bgColor={themeColor.dark.background}
             textColor={themeColor.dark.text}
             text="."
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -229,6 +332,13 @@ function App() {
             bgColor={themeColor.primary.background}
             textColor={themeColor.primary.text}
             text="="
+            actionType={ACTIONS.DEFAULT}
+            dispatch={() =>
+              dispatch({
+                type: ACTIONS.ADD_DIGIT,
+                payload: { digit: "1" },
+              })
+            }
           />
         </Grid>
       </Grid>

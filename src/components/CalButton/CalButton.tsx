@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { Button } from "@mui/material";
 import { createUseStyles, useTheme, ThemeProvider } from "react-jss";
+import { ACTIONS, ICalculatorAction } from "../../App";
 
 const useStyles = createUseStyles((theme) => ({
   button: {
@@ -13,6 +14,10 @@ interface ICalButtonInterface {
   textColor: string;
   text: string;
   long?: boolean;
+  // onClick?: () => Dispatch<ICalculatorAction>;
+  // onClick?: () => void;
+  dispatch: Dispatch<ICalculatorAction>;
+  actionType: ACTIONS;
 }
 
 export const CalButton: React.FC<ICalButtonInterface> = (prop) => {
@@ -30,6 +35,12 @@ export const CalButton: React.FC<ICalButtonInterface> = (prop) => {
         "&:hover": {
           backgroundColor: prop.bgColor[1],
         },
+      }}
+      onClick={() => {
+        prop.dispatch({
+          type: prop.actionType,
+          payload: { digit: prop.text },
+        });
       }}
     >
       {prop.text}
