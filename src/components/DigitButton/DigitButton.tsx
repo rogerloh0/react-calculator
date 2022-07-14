@@ -17,6 +17,7 @@ export const DigitButton: React.FC<IDigitButtonInterface> = (prop) => {
       textColor={themeColor.dark.text}
       text={prop.digit}
       long={prop.long}
+      digit={prop.digit}
       actionType={ACTIONS.ADD_DIGIT}
       dispatch={prop.dispatch}
     />

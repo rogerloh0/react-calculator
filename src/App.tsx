@@ -1,8 +1,10 @@
 import React, { useReducer } from "react";
+import _ from "lodash";
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { createUseStyles, useTheme, ThemeProvider } from "react-jss";
 import { CalButton } from "./components/CalButton/CalButton";
 import { DigitButton } from "./components/DigitButton/DigitButton";
+import { OperationButton } from "./components/OperationButton/OperationButton";
 import { theme as themeColor } from "./theme";
 
 const useStyles = createUseStyles(() => ({
@@ -25,12 +27,17 @@ const useStyles = createUseStyles(() => ({
     backgroundColor: "grey",
     textAlign: "center",
   },
-  currentOperand: { color: "white" },
-  previousOperand: { color: "gray" },
+  currentOperand: { color: "white", height: 55 },
+  previousOperand: { color: "gray", height: 15 },
 }));
 
 export enum ACTIONS {
   ADD_DIGIT = "add-digit",
+  CHOOSE_OPERATION = "choose-operation",
+  EVALUATE = "evaluate",
+  ALTERNATE_SIGN = "alternate-sign",
+  CLEAR = "clear",
+  ADD_PERCENTAGE = "add-percentage",
   DEFAULT = "default",
 }
 
@@ -54,10 +61,84 @@ function calculatorReducer(state: ICalculatorState, action: ICalculatorAction) {
     case ACTIONS.ADD_DIGIT:
       return {
         ...state,
-        currentOperand: state.currentOperand + payload.digit,
+        currentOperand:
+          state.currentOperand === "" && payload.digit === "."
+            ? "0."
+            : _.includes(state.currentOperand, ".") && payload.digit === "."
+            ? state.currentOperand
+            : state.currentOperand + payload.digit,
       };
+    case ACTIONS.CLEAR:
+      return {
+        currentOperand: "",
+        previousOperand: "",
+        operation: "",
+      };
+    case ACTIONS.ALTERNATE_SIGN:
+      return {
+        ...state,
+        currentOperand:
+          state.currentOperand === ""
+            ? ""
+            : _.includes(state.currentOperand, "-")
+            ? _.split(state.currentOperand, "-")[1]
+            : "-" + state.currentOperand,
+      };
+    case ACTIONS.CHOOSE_OPERATION:
+      return {
+        previousOperand: state.currentOperand,
+        operation: payload.operation ?? "",
+        currentOperand: "",
+      };
+    case ACTIONS.EVALUATE:
+      if (state.currentOperand === "") {
+        return {
+          previousOperand: "",
+          operation: "",
+          currentOperand: state.previousOperand,
+        };
+      } else if (state.previousOperand === "" || state.operation === "") {
+        return { ...state };
+      } else {
+        switch (state.operation) {
+          case "+":
+            return {
+              previousOperand: "",
+              operation: "",
+              currentOperand: (
+                parseInt(state.currentOperand) + parseInt(state.previousOperand)
+              ).toString(),
+            };
+          case "-":
+            return {
+              previousOperand: "",
+              operation: "",
+              currentOperand: (
+                parseInt(state.previousOperand) - parseInt(state.currentOperand)
+              ).toString(),
+            };
+          case "×":
+            return {
+              previousOperand: "",
+              operation: "",
+              currentOperand: (
+                parseInt(state.previousOperand) * parseInt(state.currentOperand)
+              ).toString(),
+            };
+          case "÷":
+            return {
+              previousOperand: "",
+              operation: "",
+              currentOperand: (
+                parseInt(state.previousOperand) / parseInt(state.currentOperand)
+              ).toString(),
+            };
+          default:
+            return { ...state };
+        }
+      }
     default:
-      return state;
+      return { ...state };
   }
 }
 
@@ -72,13 +153,6 @@ function App() {
 
   return (
     <div className={styles.background}>
-      <Button
-        onClick={() =>
-          dispatch({ type: ACTIONS.ADD_DIGIT, payload: { digit: "1" } })
-        }
-      >
-        TEST BUTTON
-      </Button>
       <Grid
         container
         className={styles.calculatorBody}
@@ -90,7 +164,9 @@ function App() {
         }}
       >
         <Grid item xs={12} textAlign="end">
-          <Typography className={styles.previousOperand}>4321</Typography>
+          <Typography className={styles.previousOperand}>
+            {state.previousOperand + " " + state.operation}
+          </Typography>
         </Grid>
         <Grid item xs={12} textAlign="end">
           <Typography className={styles.currentOperand} sx={{ fontSize: 50 }}>
@@ -98,53 +174,31 @@ function App() {
           </Typography>
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.light.background}
-            textColor={themeColor.light.text}
-            text="AC"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
+          <OperationButton
+            operation="AC"
+            actionType={ACTIONS.CLEAR}
+            dispatch={dispatch}
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.light.background}
-            textColor={themeColor.light.text}
-            text="+/-"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
+          <OperationButton
+            operation="+/-"
+            actionType={ACTIONS.ALTERNATE_SIGN}
+            dispatch={dispatch}
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.light.background}
-            textColor={themeColor.light.text}
-            text="%"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
+          <OperationButton
+            operation="%"
+            actionType={ACTIONS.ALTERNATE_SIGN}
+            dispatch={dispatch}
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.primary.background}
-            textColor={themeColor.primary.text}
-            text="÷"
-            actionType={ACTIONS.DEFAULT}
+          <OperationButton
+            operation="÷"
+            primary
+            actionType={ACTIONS.CHOOSE_OPERATION}
             dispatch={dispatch}
           />
         </Grid>
@@ -159,17 +213,11 @@ function App() {
           <DigitButton digit="3" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.primary.background}
-            textColor={themeColor.primary.text}
-            text="×"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
+          <OperationButton
+            operation="×"
+            primary
+            actionType={ACTIONS.CHOOSE_OPERATION}
+            dispatch={dispatch}
           />
         </Grid>
         {/* Row Divider */}
@@ -183,17 +231,11 @@ function App() {
           <DigitButton digit="6" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.primary.background}
-            textColor={themeColor.primary.text}
-            text="-"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
+          <OperationButton
+            operation="-"
+            primary
+            actionType={ACTIONS.CHOOSE_OPERATION}
+            dispatch={dispatch}
           />
         </Grid>
         {/* Row Divider */}
@@ -207,17 +249,11 @@ function App() {
           <DigitButton digit="9" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.primary.background}
-            textColor={themeColor.primary.text}
-            text="+"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
+          <OperationButton
+            operation="+"
+            primary
+            actionType={ACTIONS.CHOOSE_OPERATION}
+            dispatch={dispatch}
           />
         </Grid>
         {/* Row Divider */}
@@ -228,17 +264,11 @@ function App() {
           <DigitButton digit="." dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.primary.background}
-            textColor={themeColor.primary.text}
-            text="="
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
+          <OperationButton
+            operation="="
+            primary
+            actionType={ACTIONS.EVALUATE}
+            dispatch={dispatch}
           />
         </Grid>
       </Grid>

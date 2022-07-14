@@ -14,8 +14,8 @@ interface ICalButtonInterface {
   textColor: string;
   text: string;
   long?: boolean;
-  // onClick?: () => Dispatch<ICalculatorAction>;
-  // onClick?: () => void;
+  operation?: string;
+  digit?: string;
   dispatch: Dispatch<ICalculatorAction>;
   actionType: ACTIONS;
 }
@@ -39,7 +39,7 @@ export const CalButton: React.FC<ICalButtonInterface> = (prop) => {
       onClick={() => {
         prop.dispatch({
           type: prop.actionType,
-          payload: { digit: prop.text },
+          payload: { digit: prop.digit, operation: prop.operation },
         });
       }}
     >
