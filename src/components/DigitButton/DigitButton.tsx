@@ -7,6 +7,7 @@ import { ACTIONS, ICalculatorAction } from "../../App";
 interface IDigitButtonInterface {
   digit: string;
   dispatch: Dispatch<ICalculatorAction>;
+  long?: boolean;
 }
 
 export const DigitButton: React.FC<IDigitButtonInterface> = (prop) => {
@@ -15,6 +16,7 @@ export const DigitButton: React.FC<IDigitButtonInterface> = (prop) => {
       bgColor={themeColor.dark.background}
       textColor={themeColor.dark.text}
       text={prop.digit}
+      long={prop.long}
       actionType={ACTIONS.ADD_DIGIT}
       dispatch={prop.dispatch}
     />

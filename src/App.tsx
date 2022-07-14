@@ -156,18 +156,7 @@ function App() {
           <DigitButton digit="2" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="3"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="3" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <CalButton
@@ -185,46 +174,13 @@ function App() {
         </Grid>
         {/* Row Divider */}
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="4"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="4" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="5"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="5" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="6"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="6" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <CalButton
@@ -242,46 +198,13 @@ function App() {
         </Grid>
         {/* Row Divider */}
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="7"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="7" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="8"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="8" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="9"
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="9" dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <CalButton
@@ -299,33 +222,10 @@ function App() {
         </Grid>
         {/* Row Divider */}
         <Grid item xs={6} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="0"
-            actionType={ACTIONS.DEFAULT}
-            long
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="0" long dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <CalButton
-            bgColor={themeColor.dark.background}
-            textColor={themeColor.dark.text}
-            text="."
-            actionType={ACTIONS.DEFAULT}
-            dispatch={() =>
-              dispatch({
-                type: ACTIONS.ADD_DIGIT,
-                payload: { digit: "1" },
-              })
-            }
-          />
+          <DigitButton digit="." dispatch={dispatch} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <CalButton
