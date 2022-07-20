@@ -53,23 +53,41 @@ interface ICalculatorState {
   currentOperand: string;
   previousOperand: string;
   operation: string;
+  evaluated: boolean;
+}
+
+interface IEvaluateInput {
+  currentOperand: string;
+  previousOperand: string;
+  operation: string;
 }
 
 function calculatorReducer(state: ICalculatorState, action: ICalculatorAction) {
   const { type, payload } = action;
   switch (type) {
     case ACTIONS.ADD_DIGIT:
-      return {
-        ...state,
-        currentOperand:
-          state.currentOperand === "" && payload.digit === "."
-            ? "0."
-            : _.includes(state.currentOperand, ".") && payload.digit === "."
-            ? state.currentOperand
-            : state.currentOperand + payload.digit,
-      };
+      if (state.evaluated === false) {
+        return {
+          ...state,
+          currentOperand:
+            state.currentOperand === "" && payload.digit === "."
+              ? "0."
+              : _.includes(state.currentOperand, ".") && payload.digit === "."
+              ? state.currentOperand
+              : state.currentOperand + payload.digit,
+        };
+      } else {
+        return {
+          ...state,
+          evaluated: false,
+          currentOperand: payload.digit === "." ? "0." : payload.digit ?? "",
+          previousOperand: "",
+          operation: "",
+        };
+      }
     case ACTIONS.CLEAR:
       return {
+        ...state,
         currentOperand: "",
         previousOperand: "",
         operation: "",
@@ -86,13 +104,23 @@ function calculatorReducer(state: ICalculatorState, action: ICalculatorAction) {
       };
     case ACTIONS.CHOOSE_OPERATION:
       return {
-        previousOperand: state.currentOperand,
+        ...state,
+        evaluated: false,
+        previousOperand:
+          state.currentOperand === "" || state.previousOperand === ""
+            ? state.currentOperand
+            : evaluate({
+                currentOperand: state.currentOperand,
+                previousOperand: state.previousOperand,
+                operation: state.operation,
+              }),
         operation: payload.operation ?? "",
         currentOperand: "",
       };
     case ACTIONS.EVALUATE:
       if (state.currentOperand === "") {
         return {
+          ...state,
           previousOperand: "",
           operation: "",
           currentOperand: state.previousOperand,
@@ -100,46 +128,44 @@ function calculatorReducer(state: ICalculatorState, action: ICalculatorAction) {
       } else if (state.previousOperand === "" || state.operation === "") {
         return { ...state };
       } else {
-        switch (state.operation) {
-          case "+":
-            return {
-              previousOperand: "",
-              operation: "",
-              currentOperand: (
-                parseInt(state.currentOperand) + parseInt(state.previousOperand)
-              ).toString(),
-            };
-          case "-":
-            return {
-              previousOperand: "",
-              operation: "",
-              currentOperand: (
-                parseInt(state.previousOperand) - parseInt(state.currentOperand)
-              ).toString(),
-            };
-          case "×":
-            return {
-              previousOperand: "",
-              operation: "",
-              currentOperand: (
-                parseInt(state.previousOperand) * parseInt(state.currentOperand)
-              ).toString(),
-            };
-          case "÷":
-            return {
-              previousOperand: "",
-              operation: "",
-              currentOperand: (
-                parseInt(state.previousOperand) / parseInt(state.currentOperand)
-              ).toString(),
-            };
-          default:
-            return { ...state };
-        }
+        return {
+          ...state,
+          evaluated: true,
+          previousOperand: "",
+          operation: "",
+          currentOperand: evaluate({
+            currentOperand: state.currentOperand,
+            previousOperand: state.previousOperand,
+            operation: state.operation,
+          }),
+        };
       }
     default:
       return { ...state };
   }
+}
+
+function evaluate(input: IEvaluateInput) {
+  const prev = parseFloat(input.previousOperand);
+  const current = parseFloat(input.currentOperand);
+  if (isNaN(prev) || isNaN(current)) return "";
+  let result = "";
+  switch (input.operation) {
+    case "+":
+      result = (prev + current).toString();
+      break;
+    case "-":
+      result = (prev - current).toString();
+      break;
+    case "×":
+      result = (prev * current).toString();
+      break;
+    case "÷":
+      result = (prev / current).toString();
+      break;
+  }
+
+  return result;
 }
 
 function App() {
@@ -149,6 +175,7 @@ function App() {
     currentOperand: "",
     previousOperand: "",
     operation: "",
+    evaluated: false,
   });
 
   return (
