@@ -1,3 +1,18 @@
+# React Calculator V1
+
+## Tech Stack
+
+- React
+- MUI
+- react-jss
+- lodash
+
+## Description
+
+The functionality of the calculator is built with useReducer hook from React.
+
+This project is first completed on July 21st, 2022.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
