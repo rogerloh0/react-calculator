@@ -1,11 +1,9 @@
-import React, { useReducer } from "react";
+import { useReducer } from "react";
 import _ from "lodash";
-import { Button, Container, Grid, Typography } from "@mui/material";
-import { createUseStyles, useTheme, ThemeProvider } from "react-jss";
-import { CalButton } from "./components/CalButton/CalButton";
+import { Grid, Typography } from "@mui/material";
+import { createUseStyles } from "react-jss";
 import { DigitButton } from "./components/DigitButton/DigitButton";
 import { OperationButton } from "./components/OperationButton/OperationButton";
-import { theme as themeColor } from "./theme";
 
 const useStyles = createUseStyles(() => ({
   background: {

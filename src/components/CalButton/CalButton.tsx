@@ -1,6 +1,6 @@
 import React, { Dispatch } from "react";
 import { Button } from "@mui/material";
-import { createUseStyles, useTheme, ThemeProvider } from "react-jss";
+import { createUseStyles } from "react-jss";
 import { ACTIONS, ICalculatorAction } from "../../App";
 
 const useStyles = createUseStyles((theme) => ({

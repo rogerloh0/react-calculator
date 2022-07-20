@@ -1,6 +1,5 @@
 import React, { Dispatch } from "react";
 import { CalButton } from "../CalButton/CalButton";
-import { createUseStyles, useTheme, ThemeProvider } from "react-jss";
 import { theme as themeColor } from "../../theme";
 import { ACTIONS, ICalculatorAction } from "../../App";
 
