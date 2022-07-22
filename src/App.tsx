@@ -1,9 +1,10 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import _ from "lodash";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Button } from "@mui/material";
 import { createUseStyles } from "react-jss";
 import { DigitButton } from "./components/DigitButton/DigitButton";
 import { OperationButton } from "./components/OperationButton/OperationButton";
+import { theme } from "./theme";
 
 const useStyles = createUseStyles(() => ({
   background: {
@@ -27,6 +28,15 @@ const useStyles = createUseStyles(() => ({
   },
   currentOperand: { color: "white", height: 55 },
   previousOperand: { color: "gray", height: 15 },
+  themeSelector: {
+    backgroundColor: "black",
+    marginTop: 10,
+  },
+  themeSelectorText: {
+    color: "gray",
+    fontSize: 30,
+    fontWeight: 50,
+  },
 }));
 
 export enum ACTIONS {
@@ -169,6 +179,7 @@ function evaluate(input: IEvaluateInput) {
 function App() {
   const styles = useStyles();
 
+  const [themeState, setThemeState] = useState(0);
   const [state, dispatch] = useReducer(calculatorReducer, {
     currentOperand: "",
     previousOperand: "",
@@ -203,6 +214,7 @@ function App() {
             operation="AC"
             actionType={ACTIONS.CLEAR}
             dispatch={dispatch}
+            theme={themeState}
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -210,6 +222,7 @@ function App() {
             operation="+/-"
             actionType={ACTIONS.ALTERNATE_SIGN}
             dispatch={dispatch}
+            theme={themeState}
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -217,6 +230,7 @@ function App() {
             operation="%"
             actionType={ACTIONS.ALTERNATE_SIGN}
             dispatch={dispatch}
+            theme={themeState}
           />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
@@ -225,17 +239,18 @@ function App() {
             primary
             actionType={ACTIONS.CHOOSE_OPERATION}
             dispatch={dispatch}
+            theme={themeState}
           />
         </Grid>
         {/* Row Divider */}
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="1" dispatch={dispatch} />
+          <DigitButton digit="1" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="2" dispatch={dispatch} />
+          <DigitButton digit="2" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="3" dispatch={dispatch} />
+          <DigitButton digit="3" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <OperationButton
@@ -243,17 +258,18 @@ function App() {
             primary
             actionType={ACTIONS.CHOOSE_OPERATION}
             dispatch={dispatch}
+            theme={themeState}
           />
         </Grid>
         {/* Row Divider */}
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="4" dispatch={dispatch} />
+          <DigitButton digit="4" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="5" dispatch={dispatch} />
+          <DigitButton digit="5" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="6" dispatch={dispatch} />
+          <DigitButton digit="6" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <OperationButton
@@ -261,17 +277,18 @@ function App() {
             primary
             actionType={ACTIONS.CHOOSE_OPERATION}
             dispatch={dispatch}
+            theme={themeState}
           />
         </Grid>
         {/* Row Divider */}
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="7" dispatch={dispatch} />
+          <DigitButton digit="7" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="8" dispatch={dispatch} />
+          <DigitButton digit="8" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="9" dispatch={dispatch} />
+          <DigitButton digit="9" dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <OperationButton
@@ -279,14 +296,15 @@ function App() {
             primary
             actionType={ACTIONS.CHOOSE_OPERATION}
             dispatch={dispatch}
+            theme={themeState}
           />
         </Grid>
         {/* Row Divider */}
         <Grid item xs={6} className={styles.buttonGrid}>
-          <DigitButton digit="0" long dispatch={dispatch} />
+          <DigitButton digit="0" long dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
-          <DigitButton digit="." dispatch={dispatch} />
+          <DigitButton digit="." dispatch={dispatch} theme={themeState} />
         </Grid>
         <Grid item xs={3} className={styles.buttonGrid}>
           <OperationButton
@@ -294,8 +312,48 @@ function App() {
             primary
             actionType={ACTIONS.EVALUATE}
             dispatch={dispatch}
+            theme={themeState}
           />
         </Grid>
+      </Grid>
+
+      <Grid
+        container
+        className={styles.themeSelector}
+        sx={{
+          width: 450,
+          padding: 4,
+          height: "fit-content",
+          borderRadius: 3,
+        }}
+      >
+        <Grid item xs={4}>
+          <Typography
+            sx={{
+              color: "gray",
+              fontSize: 15,
+              fontWeight: 50,
+              textAlign: "center",
+            }}
+          >
+            Theme Selector
+          </Typography>
+        </Grid>
+        {_.map(theme, (item) => (
+          <Grid item xs={2}>
+            <Button
+              onClick={() => setThemeState(item.key)}
+              sx={{
+                color: "gray",
+                fontSize: 15,
+                fontWeight: 50,
+                textAlign: "center",
+              }}
+            >
+              {item.key + 1}
+            </Button>
+          </Grid>
+        ))}
       </Grid>
     </div>
   );

@@ -8,6 +8,7 @@ interface IOperationButtonInterface {
   primary?: boolean;
   actionType: ACTIONS;
   dispatch: Dispatch<ICalculatorAction>;
+  theme: number;
 }
 
 export const OperationButton: React.FC<IOperationButtonInterface> = (prop) => {
@@ -15,10 +16,14 @@ export const OperationButton: React.FC<IOperationButtonInterface> = (prop) => {
     <CalButton
       bgColor={
         prop.primary
-          ? themeColor.primary.background
-          : themeColor.light.background
+          ? themeColor[prop.theme].primary.background
+          : themeColor[prop.theme].light.background
       }
-      textColor={prop.primary ? themeColor.primary.text : themeColor.light.text}
+      textColor={
+        prop.primary
+          ? themeColor[prop.theme].primary.text
+          : themeColor[prop.theme].light.text
+      }
       text={prop.operation}
       operation={prop.operation}
       actionType={prop.actionType}

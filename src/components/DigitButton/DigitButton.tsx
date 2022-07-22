@@ -7,13 +7,14 @@ interface IDigitButtonInterface {
   digit: string;
   dispatch: Dispatch<ICalculatorAction>;
   long?: boolean;
+  theme: number;
 }
 
 export const DigitButton: React.FC<IDigitButtonInterface> = (prop) => {
   return (
     <CalButton
-      bgColor={themeColor.dark.background}
-      textColor={themeColor.dark.text}
+      bgColor={themeColor[prop.theme].dark.background}
+      textColor={themeColor[prop.theme].dark.text}
       text={prop.digit}
       long={prop.long}
       digit={prop.digit}
